@@ -1,0 +1,31 @@
+<% pageTitle = 'داشبورد' %>
+<%- include('../partials/admin-header') %>
+
+<h1 style="margin-bottom:24px;">داشبورد</h1>
+
+<div class="stat-grid">
+  <div class="stat-card">
+    <span class="stat-num"><%= productCount %></span>
+    <span class="stat-label">تعداد محصولات</span>
+  </div>
+  <div class="stat-card">
+    <span class="stat-num"><%= orderCount %></span>
+    <span class="stat-label">تعداد سفارش‌ها</span>
+  </div>
+  <div class="stat-card">
+    <span class="stat-num"><%= paidOrderCount %></span>
+    <span class="stat-label">سفارش‌های پرداخت‌شده</span>
+  </div>
+  <div class="stat-card">
+    <span class="stat-num"><%= messageCount %></span>
+    <span class="stat-label">پیام‌های تماس</span>
+  </div>
+</div>
+
+<div class="admin-quick-links">
+  <a href="/admin/products/new" class="btn btn-primary">+ افزودن محصول جدید</a>
+  <a href="/admin/content" class="btn btn-ghost">ویرایش متن سایت</a>
+  <a href="/admin/messages" class="btn btn-ghost">مشاهده پیام‌ها</a>
+</div>
+
+<%- include('../partials/admin-footer') %>

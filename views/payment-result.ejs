@@ -1,0 +1,29 @@
+<% pageTitle = success ? 'پرداخت موفق' : 'پرداخت ناموفق' %>
+<%- include('partials/header') %>
+
+<div class="container">
+  <div class="result-box <%= success ? 'success' : 'fail' %>">
+    <div class="result-icon"><%= success ? '✓' : '✕' %></div>
+    <h2><%= success ? 'پرداخت با موفقیت انجام شد' : 'پرداخت انجام نشد' %></h2>
+    <p><%= message %></p>
+
+    <% if (order) { %>
+      <div class="ref-box">
+        شماره سفارش: <%= order.id.slice(0,8) %><br>
+        <% if (order.zarinpalRefId) { %>کد پیگیری تراکنش: <%= order.zarinpalRefId %><br><% } %>
+        مبلغ: <%= formatToman(order.total) %>
+      </div>
+    <% } %>
+
+    <% if (detail) { %>
+      <p style="font-size:0.78rem; color:var(--ink-500);"><%= detail %></p>
+    <% } %>
+
+    <div style="display:flex; gap:12px; justify-content:center;">
+      <a href="/" class="btn btn-ghost">بازگشت به فروشگاه</a>
+      <% if (!success) { %><a href="/checkout" class="btn btn-primary">تلاش دوباره</a><% } %>
+    </div>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= typeof pageTitle !== 'undefined' ? pageTitle + ' | هیگر' : 'هیگر | گالری تشک' %></title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<header>
+  <div class="nav-wrap">
+    <a class="logo" href="/">
+      <b>هیگر</b>
+      <span>HIGER MATTRESS</span>
+    </a>
+    <nav>
+      <ul>
+        <li><a href="/products">محصولات</a></li>
+        <li><a href="/cart">سبد خرید</a></li>
+        <li><a href="/contact">تماس با ما</a></li>
+      </ul>
+    </nav>
+    <a class="cart-btn" href="/cart" aria-label="سبد خرید">
+      🛒<span class="cart-count"><%= cartCount %></span>
+    </a>
+  </div>
+</header>

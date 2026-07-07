@@ -1,0 +1,68 @@
+<% pageTitle = 'متن سایت' %>
+<%- include('../partials/admin-header') %>
+
+<h1 style="margin-bottom:20px;">ویرایش متن سایت</h1>
+<% if (saved) { %><div class="notice">تغییرات ذخیره شد.</div><% } %>
+
+<form method="POST" action="/admin/content" class="admin-form">
+
+  <h3>صفحه اصلی</h3>
+  <div class="field">
+    <label for="home_eyebrow">برچسب کوچک بالای عنوان</label>
+    <input type="text" id="home_eyebrow" name="home_eyebrow" value="<%= content.home.eyebrow %>">
+  </div>
+  <div class="field">
+    <label for="home_title">عنوان اصلی</label>
+    <input type="text" id="home_title" name="home_title" value="<%= content.home.title %>">
+  </div>
+  <div class="field">
+    <label for="home_subtitle">توضیح زیر عنوان</label>
+    <textarea id="home_subtitle" name="home_subtitle"><%= content.home.subtitle %></textarea>
+  </div>
+
+  <h3 style="margin-top:26px;">اطلاعات تماس</h3>
+  <div class="form-row">
+    <div class="field">
+      <label for="contact_phone">تلفن</label>
+      <input type="text" id="contact_phone" name="contact_phone" value="<%= content.contact.phone %>">
+    </div>
+    <div class="field">
+      <label for="contact_whatsapp">شماره واتساپ (بدون + ، با کد کشور)</label>
+      <input type="text" id="contact_whatsapp" name="contact_whatsapp" value="<%= content.contact.whatsapp %>">
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="field">
+      <label for="contact_address">آدرس</label>
+      <input type="text" id="contact_address" name="contact_address" value="<%= content.contact.address %>">
+    </div>
+    <div class="field">
+      <label for="contact_hours">ساعت کاری</label>
+      <input type="text" id="contact_hours" name="contact_hours" value="<%= content.contact.hours %>">
+    </div>
+  </div>
+
+  <h3 style="margin-top:26px;">فوتر</h3>
+  <div class="field">
+    <label for="footer_line1">متن کپی‌رایت</label>
+    <input type="text" id="footer_line1" name="footer_line1" value="<%= content.footer.line1 %>">
+  </div>
+
+  <h3 style="margin-top:26px;">توضیحات رده‌های کیفی</h3>
+  <% [1,2,3,4].forEach(function(t){ %>
+    <div class="form-row">
+      <div class="field">
+        <label for="tier<%= t %>_label">عنوان درجه <%= t %></label>
+        <input type="text" id="tier<%= t %>_label" name="tier<%= t %>_label" value="<%= content.tiers[t].label %>">
+      </div>
+      <div class="field">
+        <label for="tier<%= t %>_desc">توضیح درجه <%= t %></label>
+        <input type="text" id="tier<%= t %>_desc" name="tier<%= t %>_desc" value="<%= content.tiers[t].desc %>">
+      </div>
+    </div>
+  <% }) %>
+
+  <button type="submit" class="btn btn-primary" style="margin-top:20px;">ذخیره همه تغییرات</button>
+</form>
+
+<%- include('../partials/admin-footer') %>

@@ -1,0 +1,60 @@
+<% pageTitle = 'سبد خرید' %>
+<%- include('partials/header') %>
+
+<div class="container" style="padding:40px 0 80px;">
+  <span class="eyebrow">سبد خرید</span>
+  <h1 style="margin:12px 0 24px;">سفارش شما</h1>
+
+  <% if (addedName) { %>
+    <div class="notice"><%= addedName %> به سبد خرید اضافه شد.</div>
+  <% } %>
+
+  <% if (lines.length === 0) { %>
+    <div class="empty-note">
+      <p>سبد خرید شما خالی است.</p>
+      <br>
+      <a class="btn btn-primary" href="/">مشاهده تشک‌ها</a>
+    </div>
+  <% } else { %>
+    <table class="cart-table">
+      <thead>
+        <tr><th>محصول</th><th>سایز</th><th>تعداد</th><th>قیمت واحد</th><th>جمع</th><th></th></tr>
+      </thead>
+      <tbody>
+        <% lines.forEach(function(l){ %>
+          <tr>
+            <td><%= l.faName %></td>
+            <td><%= l.size.replace('x',' × ') %></td>
+            <td>
+              <form action="/cart/update" method="POST" style="display:flex; gap:8px; align-items:center;">
+                <input type="hidden" name="key" value="<%= l.key %>">
+                <input type="number" name="qty" value="<%= l.qty %>" min="1" class="qty-input">
+                <button type="submit" class="btn-ghost btn" style="padding:6px 12px; font-size:0.78rem;">به‌روزرسانی</button>
+              </form>
+            </td>
+            <td><%= formatToman(l.unitPrice) %></td>
+            <td><%= formatToman(l.lineTotal) %></td>
+            <td>
+              <form action="/cart/remove" method="POST">
+                <input type="hidden" name="key" value="<%= l.key %>">
+                <button type="submit" class="remove-link">حذف</button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+
+    <div class="cart-summary">
+      <span>جمع کل سفارش:</span>
+      <span><%= formatToman(total) %></span>
+    </div>
+
+    <div style="display:flex; gap:14px; justify-content:flex-end;">
+      <a href="/" class="btn btn-ghost">ادامه خرید</a>
+      <a href="/checkout" class="btn btn-primary">تکمیل خرید ←</a>
+    </div>
+  <% } %>
+</div>
+
+<%- include('partials/footer') %>

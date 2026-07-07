@@ -1,0 +1,56 @@
+<% pageTitle = product ? 'ویرایش محصول' : 'محصول جدید' %>
+<%- include('../partials/admin-header') %>
+
+<h1 style="margin-bottom:20px;"><%= product ? 'ویرایش ' + product.faName : 'افزودن محصول جدید' %></h1>
+
+<% if (error) { %><div class="error-notice"><%= error %></div><% } %>
+
+<form method="POST" action="<%= product && product.slug ? '/admin/products/' + product.slug + '/edit' : '/admin/products/new' %>" class="admin-form">
+  <div class="form-row">
+    <div class="field">
+      <label for="faName">نام فارسی</label>
+      <input type="text" id="faName" name="faName" required value="<%= product ? product.faName || '' : '' %>">
+    </div>
+    <div class="field">
+      <label for="enName">نام انگلیسی</label>
+      <input type="text" id="enName" name="enName" required value="<%= product ? product.enName || '' : '' %>">
+    </div>
+    <div class="field">
+      <label for="tier">درجه کیفی</label>
+      <select id="tier" name="tier">
+        <% [1,2,3,4].forEach(function(t){ %>
+          <option value="<%= t %>" <%= product && Number(product.tier)===t ? 'selected' : '' %>>درجه <%= t %></option>
+        <% }) %>
+      </select>
+    </div>
+    <div class="field">
+      <label for="category">لایه‌بندی</label>
+      <select id="category" name="category">
+        <% CATEGORIES.forEach(function(c){ %>
+          <option value="<%= c.slug %>" <%= product && product.category===c.slug ? 'selected' : '' %>><%= c.group ? c.group + ' — ' + c.label : c.label %></option>
+        <% }) %>
+      </select>
+    </div>
+  </div>
+
+  <h3 style="margin:24px 0 12px;">قیمت هر سایز (تومان)</h3>
+  <div class="price-grid">
+    <% SIZES.forEach(function(s){
+      let val = '';
+      if (product && product.prices && product.prices[s] !== undefined) val = product.prices[s];
+      else if (product && product['price_' + s] !== undefined) val = product['price_' + s];
+    %>
+      <div class="field">
+        <label for="price_<%= s %>"><%= s.replace('x',' × ') %></label>
+        <input type="number" id="price_<%= s %>" name="price_<%= s %>" min="0" step="1000" value="<%= val %>">
+      </div>
+    <% }) %>
+  </div>
+
+  <div style="display:flex; gap:12px; margin-top:24px;">
+    <button type="submit" class="btn btn-primary"><%= product && product.slug ? 'ذخیره تغییرات' : 'افزودن محصول' %></button>
+    <a href="/admin/products" class="btn btn-ghost">انصراف</a>
+  </div>
+</form>
+
+<%- include('../partials/admin-footer') %>

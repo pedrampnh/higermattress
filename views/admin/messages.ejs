@@ -1,0 +1,24 @@
+<% pageTitle = 'پیام‌های تماس' %>
+<%- include('../partials/admin-header') %>
+
+<h1 style="margin-bottom:20px;">پیام‌های تماس (<%= messages.length %>)</h1>
+
+<% if (messages.length === 0) { %>
+  <p class="muted">هنوز پیامی ثبت نشده است.</p>
+<% } else { %>
+  <table class="admin-table">
+    <thead><tr><th>نام</th><th>تلفن</th><th>پیام</th><th>تاریخ</th></tr></thead>
+    <tbody>
+      <% messages.forEach(function(m){ %>
+        <tr>
+          <td><%= m.name %></td>
+          <td><%= m.phone %></td>
+          <td><%= m.message %></td>
+          <td class="muted"><%= new Date(m.createdAt).toLocaleString('fa-IR') %></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+<% } %>
+
+<%- include('../partials/admin-footer') %>

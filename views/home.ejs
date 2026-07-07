@@ -1,0 +1,45 @@
+<% pageTitle = 'صفحه اصلی' %>
+<%- include('partials/header') %>
+
+<section class="page-hero container">
+  <span class="eyebrow"><%= content.home.eyebrow %></span>
+  <h1><%= content.home.title %></h1>
+  <p><%= content.home.subtitle %></p>
+  <div style="margin-top:22px;">
+    <a href="/products" class="btn btn-primary">مشاهده همه محصولات ←</a>
+  </div>
+</section>
+
+<div class="container">
+  <div class="category-teaser">
+    <% categories.forEach(function(c){ %>
+      <a class="category-card" href="/products?category=<%= c.slug %>">
+        <span class="category-card-group"><%= c.group || '' %></span>
+        <span class="category-card-name"><%= c.label %></span>
+      </a>
+    <% }) %>
+  </div>
+</div>
+
+<div class="container">
+  <div class="sec-head" style="margin-top:20px;">
+    <span class="eyebrow">پیشنهاد ما</span>
+    <h2>چند مدل محبوب</h2>
+  </div>
+  <div class="products-grid">
+    <% featured.forEach(function(p){ %>
+      <a class="product-card" href="/product/<%= p.slug %>">
+        <div class="product-thumb"><%= p.enName.toUpperCase() %></div>
+        <span class="product-tag">درجه <%= p.tier %></span>
+        <h3><%= p.faName %></h3>
+        <span class="en-name"><%= p.enName %></span>
+        <span class="from-price"><small>شروع از (سایز ۷۰×۱۳۰)</small><%= formatToman(p.prices['70x130']) %></span>
+      </a>
+    <% }) %>
+  </div>
+  <div style="text-align:center; padding-bottom:60px;">
+    <a href="/products" class="btn btn-ghost">مشاهده همه ۲۷ مدل ←</a>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

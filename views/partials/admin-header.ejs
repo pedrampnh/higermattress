@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= typeof pageTitle !== 'undefined' ? pageTitle + ' | پنل مدیریت هیگر' : 'پنل مدیریت هیگر' %></title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body class="admin-body">
+<div class="admin-shell">
+  <aside class="admin-sidebar">
+    <div class="logo" style="margin-bottom:30px;">
+      <b>هیگر</b>
+      <span>پنل مدیریت</span>
+    </div>
+    <nav class="admin-nav">
+      <a href="/admin">داشبورد</a>
+      <a href="/admin/products">محصولات</a>
+      <a href="/admin/content">متن سایت</a>
+      <a href="/admin/messages">پیام‌های تماس</a>
+      <a href="/admin/orders">سفارش‌ها</a>
+      <a href="/" target="_blank">مشاهده سایت ↗</a>
+    </nav>
+    <form method="POST" action="/admin/logout" style="margin-top:auto;">
+      <button type="submit" class="btn-ghost btn btn-full" style="border-color:rgba(255,255,255,0.3); color:#fff;">خروج</button>
+    </form>
+  </aside>
+  <main class="admin-main">

@@ -1,0 +1,98 @@
+<% pageTitle = 'همه محصولات' %>
+<%- include('partials/header') %>
+
+<div class="container">
+  <div class="page-hero" style="padding-bottom:10px;">
+    <span class="eyebrow">کاتالوگ کامل</span>
+    <h1>همه‌ی مدل‌های تشک هیگر (<%= products.length %>)</h1>
+  </div>
+
+  <div class="catalog-layout">
+    <aside class="filter-sidebar">
+      <form method="GET" action="/products" id="filterForm">
+        <input type="hidden" name="sort" value="<%= sort %>" id="sortHidden">
+
+        <h3>لایه‌بندی</h3>
+        <div class="filter-group">
+          <% var lastGroup = null; %>
+          <% categories.forEach(function(c){ %>
+            <% if (c.group !== lastGroup) { lastGroup = c.group; %>
+              <span class="filter-subhead"><%= c.group %></span>
+            <% } %>
+            <label class="filter-check filter-check-sub">
+              <input type="checkbox" name="category" value="<%= c.slug %>"
+                <%= selectedCategories.includes(c.slug) ? 'checked' : '' %>
+                onchange="document.getElementById('filterForm').submit()">
+              <%= c.label %>
+            </label>
+          <% }) %>
+        </div>
+
+        <h3 style="margin-top:18px;">بازه قیمت</h3>
+        <div class="filter-group">
+          <label class="filter-check">
+            <input type="radio" name="priceBucket" value="" <%= priceBucket==='' ? 'checked' : '' %> onchange="document.getElementById('filterForm').submit()">
+            همه قیمت‌ها
+          </label>
+          <label class="filter-check">
+            <input type="radio" name="priceBucket" value="under5" <%= priceBucket==='under5' ? 'checked' : '' %> onchange="document.getElementById('filterForm').submit()">
+            تا ۵ میلیون تومان
+          </label>
+          <label class="filter-check">
+            <input type="radio" name="priceBucket" value="5to10" <%= priceBucket==='5to10' ? 'checked' : '' %> onchange="document.getElementById('filterForm').submit()">
+            ۵ تا ۱۰ میلیون تومان
+          </label>
+          <label class="filter-check">
+            <input type="radio" name="priceBucket" value="10to20" <%= priceBucket==='10to20' ? 'checked' : '' %> onchange="document.getElementById('filterForm').submit()">
+            ۱۰ تا ۲۰ میلیون تومان
+          </label>
+          <label class="filter-check">
+            <input type="radio" name="priceBucket" value="over20" <%= priceBucket==='over20' ? 'checked' : '' %> onchange="document.getElementById('filterForm').submit()">
+            بالای ۲۰ میلیون تومان
+          </label>
+        </div>
+
+        <a href="/products" class="btn btn-ghost btn-full" style="margin-top:20px;">حذف همه فیلترها</a>
+      </form>
+    </aside>
+
+    <div class="catalog-main">
+      <div class="sort-bar">
+        <span class="muted"><%= products.length %> محصول</span>
+        <form method="GET" action="/products" id="sortForm">
+          <% selectedCategories.forEach(function(c){ %><input type="hidden" name="category" value="<%= c %>"><% }) %>
+          <input type="hidden" name="priceBucket" value="<%= priceBucket %>">
+          <select name="sort" onchange="document.getElementById('sortForm').submit()">
+            <option value="default" <%= sort==='default' ? 'selected' : '' %>>مرتب‌سازی پیش‌فرض</option>
+            <option value="price_asc" <%= sort==='price_asc' ? 'selected' : '' %>>قیمت: ارزان‌ترین</option>
+            <option value="price_desc" <%= sort==='price_desc' ? 'selected' : '' %>>قیمت: گران‌ترین</option>
+            <option value="name" <%= sort==='name' ? 'selected' : '' %>>نام (الفبایی)</option>
+            <option value="tier" <%= sort==='tier' ? 'selected' : '' %>>درجه کیفی</option>
+          </select>
+        </form>
+      </div>
+
+      <% if (products.length === 0) { %>
+        <div class="empty-note">
+          <p>محصولی با این فیلترها پیدا نشد.</p>
+          <br>
+          <a href="/products" class="btn btn-primary">حذف فیلترها</a>
+        </div>
+      <% } else { %>
+        <div class="products-grid catalog-grid">
+          <% products.forEach(function(p){ %>
+            <a class="product-card" href="/product/<%= p.slug %>">
+              <div class="product-thumb"><%= p.enName.toUpperCase() %></div>
+              <span class="product-tag">درجه <%= p.tier %> · <%= categories.find(c => c.slug === p.category).label %></span>
+              <h3><%= p.faName %></h3>
+              <span class="en-name"><%= p.enName %></span>
+              <span class="from-price"><small>شروع از (سایز ۷۰×۱۳۰)</small><%= formatToman(p.prices['70x130']) %></span>
+            </a>
+          <% }) %>
+        </div>
+      <% } %>
+    </div>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

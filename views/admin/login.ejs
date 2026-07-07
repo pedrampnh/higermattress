@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ورود مدیریت | هیگر</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body>
+<div class="admin-login-wrap">
+  <form class="admin-login-card" method="POST" action="/admin/login">
+    <div class="logo" style="margin-bottom:20px;">
+      <b>هیگر</b>
+      <span>پنل مدیریت</span>
+    </div>
+    <% if (error) { %><div class="error-notice"><%= error %></div><% } %>
+    <div class="field">
+      <label for="password">رمز عبور مدیریت</label>
+      <input type="password" id="password" name="password" required autofocus>
+    </div>
+    <button type="submit" class="btn btn-primary btn-full">ورود</button>
+  </form>
+</div>
+</body>
+</html>

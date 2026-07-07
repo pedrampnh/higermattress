@@ -1,0 +1,32 @@
+<% pageTitle = 'محصولات' %>
+<%- include('../partials/admin-header') %>
+
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+  <h1>محصولات (<%= products.length %>)</h1>
+  <a href="/admin/products/new" class="btn btn-primary">+ محصول جدید</a>
+</div>
+
+<table class="admin-table">
+  <thead>
+    <tr><th>نام</th><th>درجه</th><th>لایه‌بندی</th><th>قیمت ۱۶۰×۲۰۰</th><th></th></tr>
+  </thead>
+  <tbody>
+    <% products.forEach(function(p){ %>
+      <tr>
+        <td><%= p.faName %> <span class="muted">(<%= p.enName %>)</span></td>
+        <td>درجه <%= p.tier %></td>
+        <td><%= categoryLabel(p.category) %></td>
+        <td><%= formatToman(p.prices['160x200']) %></td>
+        <td class="row-actions">
+          <a href="/product/<%= p.slug %>" target="_blank" class="link-btn">مشاهده</a>
+          <a href="/admin/products/<%= p.slug %>/edit" class="link-btn">ویرایش</a>
+          <form action="/admin/products/<%= p.slug %>/delete" method="POST" onsubmit="return confirm('محصول «<%= p.faName %>» حذف شود؟');" style="display:inline;">
+            <button type="submit" class="link-btn danger">حذف</button>
+          </form>
+        </td>
+      </tr>
+    <% }) %>
+  </tbody>
+</table>
+
+<%- include('../partials/admin-footer') %>

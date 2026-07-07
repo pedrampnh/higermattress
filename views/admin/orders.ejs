@@ -1,0 +1,26 @@
+<% pageTitle = 'سفارش‌ها' %>
+<%- include('../partials/admin-header') %>
+
+<h1 style="margin-bottom:20px;">سفارش‌ها (<%= orders.length %>)</h1>
+
+<% if (orders.length === 0) { %>
+  <p class="muted">هنوز سفارشی ثبت نشده است.</p>
+<% } else { %>
+  <table class="admin-table">
+    <thead><tr><th>مشتری</th><th>اقلام</th><th>مبلغ</th><th>وضعیت</th><th>کد پیگیری</th><th>تاریخ</th></tr></thead>
+    <tbody>
+      <% orders.forEach(function(o){ %>
+        <tr>
+          <td><%= o.customer.name %><br><span class="muted"><%= o.customer.phone %></span></td>
+          <td><% o.items.forEach(function(it){ %><%= it.faName %> (<%= it.size.replace('x',' × ') %>) × <%= it.qty %><br><% }) %></td>
+          <td><%= formatToman(o.total) %></td>
+          <td><span class="status-badge status-<%= o.status %>"><%= o.status %></span></td>
+          <td><%= o.zarinpalRefId || '—' %></td>
+          <td class="muted"><%= new Date(o.createdAt).toLocaleString('fa-IR') %></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+<% } %>
+
+<%- include('../partials/admin-footer') %>
