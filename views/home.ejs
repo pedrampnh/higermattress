@@ -1,16 +1,112 @@
 <% pageTitle = 'صفحه اصلی' %>
 <%- include('partials/header') %>
 
-<section class="page-hero container">
-  <span class="eyebrow"><%= content.home.eyebrow %></span>
-  <h1><%= content.home.title %></h1>
-  <p><%= content.home.subtitle %></p>
-  <div style="margin-top:22px;">
-    <a href="/products" class="btn btn-primary">مشاهده همه محصولات ←</a>
+<section class="hero-slider" id="heroSlider">
+
+  <!-- Slide 1: Brand mark -->
+  <div class="hero-slide hero-slide-1 is-active" data-slide="0">
+    <div class="hero-banner-inner">
+      <img class="hero-brand-mark" src="/img/logo.png" alt="هیگر مترس">
+      <span class="eyebrow"><%= content.home.eyebrow %></span>
+      <h1><%= content.home.title %></h1>
+      <p><%= content.home.subtitle %></p>
+      <div class="hero-actions">
+        <a href="/products" class="btn btn-primary">مشاهده همه محصولات</a>
+        <a href="/contact" class="btn btn-ghost">تماس با کارشناسان</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 2: Mattress-in-a-room illustration -->
+  <div class="hero-slide hero-slide-2" data-slide="1">
+    <svg class="room-scene" viewBox="0 0 1600 800" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#FFC000" stop-opacity="0.55"/>
+          <stop offset="100%" stop-color="#FFC000" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+      <circle cx="1290" cy="150" r="220" fill="url(#glow)"/>
+      <!-- window -->
+      <rect x="1150" y="80" width="220" height="260" rx="4" fill="none" stroke="#FFC000" stroke-opacity="0.55" stroke-width="2"/>
+      <line x1="1260" y1="80" x2="1260" y2="340" stroke="#FFC000" stroke-opacity="0.4" stroke-width="2"/>
+      <line x1="1150" y1="210" x2="1370" y2="210" stroke="#FFC000" stroke-opacity="0.4" stroke-width="2"/>
+      <!-- floor line -->
+      <line x1="0" y1="640" x2="1600" y2="640" stroke="#FFC000" stroke-opacity="0.25" stroke-width="2"/>
+      <!-- rug -->
+      <ellipse cx="620" cy="700" rx="420" ry="46" fill="none" stroke="#FFC000" stroke-opacity="0.3" stroke-width="2" stroke-dasharray="6 8"/>
+      <!-- headboard -->
+      <rect x="220" y="330" width="620" height="200" rx="18" fill="none" stroke="#FFC000" stroke-opacity="0.55" stroke-width="2"/>
+      <line x1="320" y1="350" x2="320" y2="510" stroke="#FFC000" stroke-opacity="0.28" stroke-width="1.5"/>
+      <line x1="420" y1="350" x2="420" y2="510" stroke="#FFC000" stroke-opacity="0.28" stroke-width="1.5"/>
+      <line x1="520" y1="350" x2="520" y2="510" stroke="#FFC000" stroke-opacity="0.28" stroke-width="1.5"/>
+      <line x1="620" y1="350" x2="620" y2="510" stroke="#FFC000" stroke-opacity="0.28" stroke-width="1.5"/>
+      <line x1="720" y1="350" x2="720" y2="510" stroke="#FFC000" stroke-opacity="0.28" stroke-width="1.5"/>
+      <!-- mattress -->
+      <rect x="180" y="500" width="700" height="150" rx="24" fill="none" stroke="#FFC000" stroke-opacity="0.7" stroke-width="2.5"/>
+      <line x1="210" y1="540" x2="850" y2="540" stroke="#FFC000" stroke-opacity="0.35" stroke-width="1.5"/>
+      <!-- pillows -->
+      <rect x="220" y="440" width="150" height="90" rx="20" fill="none" stroke="#FFC000" stroke-opacity="0.6" stroke-width="2"/>
+      <rect x="400" y="440" width="150" height="90" rx="20" fill="none" stroke="#FFC000" stroke-opacity="0.6" stroke-width="2"/>
+      <!-- bed legs -->
+      <line x1="210" y1="650" x2="210" y2="690" stroke="#FFC000" stroke-opacity="0.5" stroke-width="3"/>
+      <line x1="850" y1="650" x2="850" y2="690" stroke="#FFC000" stroke-opacity="0.5" stroke-width="3"/>
+      <!-- nightstand + lamp -->
+      <rect x="940" y="560" width="110" height="90" rx="6" fill="none" stroke="#FFC000" stroke-opacity="0.5" stroke-width="2"/>
+      <line x1="965" y1="560" x2="965" y2="500" stroke="#FFC000" stroke-opacity="0.5" stroke-width="2"/>
+      <path d="M935 500 L995 500 L980 460 L950 460 Z" fill="none" stroke="#FFC000" stroke-opacity="0.6" stroke-width="2"/>
+      <circle cx="965" cy="470" r="55" fill="url(#glow)"/>
+    </svg>
+    <div class="hero-banner-inner">
+      <span class="eyebrow">راحتی هر شب</span>
+      <h1>خوابی که آرزویش را داشتید</h1>
+      <p>تشک‌هایی طراحی‌شده برای آسایش عمیق، در هماهنگی با فضای اتاق خواب شما.</p>
+      <div class="hero-actions">
+        <a href="/products" class="btn btn-primary">مشاهده همه محصولات</a>
+        <a href="/contact" class="btn btn-ghost">تماس با کارشناسان</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-dots">
+    <button class="hero-dot is-active" data-dot="0" aria-label="اسلاید ۱"></button>
+    <button class="hero-dot" data-dot="1" aria-label="اسلاید ۲"></button>
   </div>
 </section>
 
+<script>
+(function(){
+  var slides = document.querySelectorAll('#heroSlider .hero-slide');
+  var dots = document.querySelectorAll('#heroSlider .hero-dot');
+  var current = 0, timer;
+  function show(i){
+    slides.forEach(function(s,idx){ s.classList.toggle('is-active', idx===i); });
+    dots.forEach(function(d,idx){ d.classList.toggle('is-active', idx===i); });
+    current = i;
+  }
+  function next(){ show((current+1) % slides.length); }
+  function startAuto(){ timer = setInterval(next, 6000); }
+  function stopAuto(){ clearInterval(timer); }
+  dots.forEach(function(d){
+    d.addEventListener('click', function(){ stopAuto(); show(parseInt(d.dataset.dot,10)); startAuto(); });
+  });
+  if (slides.length > 1) startAuto();
+})();
+</script>
+
+<div class="container" style="padding-top:60px;">
+  <div class="sec-head">
+    <span class="eyebrow">خرید بر اساس تعداد نفرات</span>
+    <h2>انواع تشک خواب بر اساس تعداد نفرات و گروه سنی</h2>
+  </div>
+  <%- include('partials/size-categories', { sizeCategories: sizeCategories }) %>
+</div>
+
 <div class="container">
+  <div class="sec-head">
+    <span class="eyebrow">خرید بر اساس دسته</span>
+    <h2>دسته‌بندی محصولات</h2>
+  </div>
   <div class="category-teaser">
     <% categories.forEach(function(c){ %>
       <a class="category-card" href="/products?category=<%= c.slug %>">
@@ -24,7 +120,7 @@
 <div class="container">
   <div class="sec-head" style="margin-top:20px;">
     <span class="eyebrow">پیشنهاد ما</span>
-    <h2>چند مدل محبوب</h2>
+    <h2>پرفروش‌ترین مدل‌ها</h2>
   </div>
   <div class="products-grid">
     <% featured.forEach(function(p){ %>
@@ -38,7 +134,7 @@
     <% }) %>
   </div>
   <div style="text-align:center; padding-bottom:60px;">
-    <a href="/products" class="btn btn-ghost">مشاهده همه ۲۷ مدل ←</a>
+    <a href="/products" class="btn btn-ghost">مشاهده همه ۲۷ مدل</a>
   </div>
 </div>
 
