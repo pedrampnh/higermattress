@@ -1,32 +1,46 @@
 <footer>
-  <div class="container footer-top">
-    <div class="footer-col">
-      <a class="logo" href="/" style="align-items:flex-start; margin-bottom:16px;">
-        <img src="/img/logo.png" alt="هیگر مترس" style="height:34px;">
-      </a>
-      <p><%= siteFooter.line1 %></p>
+  <div class="footer-grid">
+    <div class="footer-logo">
+      <b>هیگر</b>
+      <span>HIGER MATTRESS</span>
+      <p>فروشگاه تخصصی تشک‌های باکیفیت ایرانی با بیش از ۲۷ مدل متنوع. ارسال سراسری، گارانتی اصالت کالا.</p>
     </div>
     <div class="footer-col">
       <h4>فروشگاه</h4>
-      <a href="/products">همه محصولات</a>
-      <a href="/products">دسته‌بندی‌ها</a>
-      <a href="/cart">سبد خرید</a>
+      <ul>
+        <li><a href="/products">همه محصولات</a></li>
+        <li><a href="/products?category=spring-pocket&category=spring-bonnell">تشک‌های فنری</a></li>
+        <li><a href="/products?category=foam&category=memory-foam">تشک‌های اسفنجی</a></li>
+        <li><a href="/cart">سبد خرید</a></li>
+      </ul>
     </div>
     <div class="footer-col">
       <h4>راهنما</h4>
-      <a href="/contact">تماس با ما</a>
-      <a href="/contact">سوالات متداول</a>
-      <a href="/contact">راهنمای خرید</a>
+      <ul>
+        <li><a href="/contact">تماس با ما</a></li>
+        <li><a href="/products">راهنمای خرید</a></li>
+      </ul>
     </div>
     <div class="footer-col">
       <h4>تماس</h4>
-      <p>تلفن پشتیبانی: <%= SUPPORT_PHONE %></p>
+      <p>
+        تلفن پشتیبانی:<br>
+        <strong style="color:rgba(255,255,255,0.85)"><%= SUPPORT_PHONE || '—' %></strong>
+      </p>
+      <% if (SUPPORT_WHATSAPP) { %>
+        <p style="margin-top:8px;">
+          <a href="https://wa.me/<%= SUPPORT_WHATSAPP %>" style="color:var(--honey-500);">واتساپ</a>
+        </p>
+      <% } %>
     </div>
   </div>
-  <div class="container footer-bottom">
-    <span>© <%= new Date().getFullYear() %> هیگر مترس. تمامی حقوق محفوظ است.</span>
+  <div class="footer-bottom">
+    <span>
+      <%= siteFooter && siteFooter.line1 ? siteFooter.line1 : '© هیگر مترس. تمامی حقوق محفوظ است.' %>
+    </span>
     <span>طراحی و توسعه با ❤</span>
   </div>
 </footer>
+
 </body>
 </html>

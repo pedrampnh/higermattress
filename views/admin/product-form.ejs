@@ -1,55 +1,89 @@
 <% pageTitle = product ? 'ویرایش محصول' : 'محصول جدید' %>
 <%- include('../partials/admin-header') %>
 
-<h1 style="margin-bottom:20px;"><%= product ? 'ویرایش ' + product.faName : 'افزودن محصول جدید' %></h1>
-
-<% if (error) { %><div class="error-notice"><%= error %></div><% } %>
-
-<form method="POST" action="<%= product && product.slug ? '/admin/products/' + product.slug + '/edit' : '/admin/products/new' %>" class="admin-form">
-  <div class="form-row">
-    <div class="field">
-      <label for="faName">نام فارسی</label>
-      <input type="text" id="faName" name="faName" required value="<%= product ? product.faName || '' : '' %>">
-    </div>
-    <div class="field">
-      <label for="enName">نام انگلیسی</label>
-      <input type="text" id="enName" name="enName" required value="<%= product ? product.enName || '' : '' %>">
-    </div>
-    <div class="field">
-      <label for="tier">درجه کیفی</label>
-      <select id="tier" name="tier">
-        <% [1,2,3,4].forEach(function(t){ %>
-          <option value="<%= t %>" <%= product && Number(product.tier)===t ? 'selected' : '' %>>درجه <%= t %></option>
-        <% }) %>
-      </select>
-    </div>
-    <div class="field">
-      <label for="category">لایه‌بندی</label>
-      <select id="category" name="category">
-        <% CATEGORIES.forEach(function(c){ %>
-          <option value="<%= c.slug %>" <%= product && product.category===c.slug ? 'selected' : '' %>><%= c.group ? c.group + ' — ' + c.label : c.label %></option>
-        <% }) %>
-      </select>
-    </div>
+<div style="display:flex; align-items:center; gap:12px; margin-bottom:24px;">
+  <a href="/admin/products" class="link-btn">← برگشت</a>
+  <div>
+    <div class="admin-page-title"><%= product ? 'ویرایش: ' + product.faName : 'افزودن محصول جدید' %></div>
   </div>
+</div>
 
-  <h3 style="margin:24px 0 12px;">قیمت هر سایز (تومان)</h3>
-  <div class="price-grid">
-    <% SIZES.forEach(function(s){
-      let val = '';
-      if (product && product.prices && product.prices[s] !== undefined) val = product.prices[s];
-      else if (product && product['price_' + s] !== undefined) val = product['price_' + s];
-    %>
-      <div class="field">
-        <label for="price_<%= s %>"><%= s.replace('x',' × ') %></label>
-        <input type="number" id="price_<%= s %>" name="price_<%= s %>" min="0" step="1000" value="<%= val %>">
+<% if (error) { %>
+  <div class="alert alert-error">⚠️ <%= error %></div>
+<% } %>
+
+<form method="POST" action="<%= product && product.slug ? '/admin/products/' + product.slug + '/edit' : '/admin/products/new' %>">
+  <div class="admin-form-card">
+
+    <!-- اطلاعات اصلی -->
+    <div class="form-section">
+      <div class="form-section-title">اطلاعات اصلی محصول</div>
+      <div class="form-row">
+        <div class="field">
+          <label for="faName">نام فارسی <span style="color:red">*</span></label>
+          <input type="text" id="faName" name="faName" required
+            value="<%= product ? product.faName || '' : '' %>"
+            placeholder="مثلاً: تشک رویال">
+        </div>
+        <div class="field">
+          <label for="enName">نام انگلیسی <span style="color:red">*</span></label>
+          <input type="text" id="enName" name="enName" required
+            value="<%= product ? product.enName || '' : '' %>"
+            placeholder="مثلاً: Royal">
+        </div>
       </div>
-    <% }) %>
-  </div>
+      <div class="form-row" style="margin-top:12px;">
+        <div class="field">
+          <label for="tier">درجه کیفی</label>
+          <select id="tier" name="tier">
+            <% [1,2,3,4].forEach(function(t){ %>
+              <option value="<%= t %>" <%= product && Number(product.tier)===t ? 'selected' : '' %>>
+                درجه <%= t %> <%= t===1?'(پایه)': t===2?'(متوسط)': t===3?'(خوب)': '(ممتاز)' %>
+              </option>
+            <% }); %>
+          </select>
+        </div>
+        <div class="field">
+          <label for="category">نوع / لایه‌بندی</label>
+          <select id="category" name="category">
+            <% CATEGORIES.forEach(function(c){ %>
+              <option value="<%= c.slug %>" <%= product && product.category===c.slug ? 'selected' : '' %>>
+                <%= c.group ? c.group + ' — ' + c.label : c.label %>
+              </option>
+            <% }); %>
+          </select>
+        </div>
+      </div>
+    </div>
 
-  <div style="display:flex; gap:12px; margin-top:24px;">
-    <button type="submit" class="btn btn-primary"><%= product && product.slug ? 'ذخیره تغییرات' : 'افزودن محصول' %></button>
-    <a href="/admin/products" class="btn btn-ghost">انصراف</a>
+    <!-- قیمت‌گذاری -->
+    <div class="form-section">
+      <div class="form-section-title">قیمت هر سایز (تومان)</div>
+      <div class="price-grid">
+        <% SIZES.forEach(function(s){
+          let val = '';
+          if (product && product.prices && product.prices[s] !== undefined) val = product.prices[s];
+          else if (product && product['price_' + s] !== undefined) val = product['price_' + s];
+        %>
+          <div class="field">
+            <label for="price_<%= s %>">سایز <%= s.replace('x',' × ') %></label>
+            <input type="number" id="price_<%= s %>" name="price_<%= s %>"
+              min="0" step="1000" value="<%= val %>"
+              placeholder="۰ = موجود نیست">
+          </div>
+        <% }); %>
+      </div>
+      <p style="font-size:0.78rem; color:var(--ink-500); margin-top:10px;">💡 اگر محصول در یک سایز موجود نیست، قیمت آن را ۰ یا خالی بگذارید</p>
+    </div>
+
+    <!-- دکمه‌ها -->
+    <div style="display:flex; gap:12px; margin-top:4px;">
+      <button type="submit" class="btn btn-primary">
+        <%= product && product.slug ? '💾 ذخیره تغییرات' : '✅ افزودن محصول' %>
+      </button>
+      <a href="/admin/products" class="btn btn-ghost">انصراف</a>
+    </div>
+
   </div>
 </form>
 

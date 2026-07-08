@@ -1,31 +1,115 @@
 <% pageTitle = 'داشبورد' %>
 <%- include('../partials/admin-header') %>
 
-<h1 style="margin-bottom:24px;">داشبورد</h1>
+<div class="admin-page-title">داشبورد</div>
+<div class="admin-page-subtitle">خلاصه وضعیت فروشگاه هیگر</div>
 
+<!-- کارت‌های آمار -->
 <div class="stat-grid">
   <div class="stat-card">
+    <div class="stat-card-icon">🛏</div>
     <span class="stat-num"><%= productCount %></span>
-    <span class="stat-label">تعداد محصولات</span>
+    <span class="stat-label">محصول فعال</span>
   </div>
   <div class="stat-card">
+    <div class="stat-card-icon">📦</div>
     <span class="stat-num"><%= orderCount %></span>
-    <span class="stat-label">تعداد سفارش‌ها</span>
+    <span class="stat-label">کل سفارش‌ها</span>
   </div>
-  <div class="stat-card">
+  <div class="stat-card accent">
+    <div class="stat-card-icon">✅</div>
     <span class="stat-num"><%= paidOrderCount %></span>
-    <span class="stat-label">سفارش‌های پرداخت‌شده</span>
+    <span class="stat-label">سفارش پرداخت‌شده</span>
   </div>
   <div class="stat-card">
+    <div class="stat-card-icon">💬</div>
     <span class="stat-num"><%= messageCount %></span>
-    <span class="stat-label">پیام‌های تماس</span>
+    <span class="stat-label">پیام تماس</span>
   </div>
 </div>
 
+<!-- دسترسی سریع -->
 <div class="admin-quick-links">
-  <a href="/admin/products/new" class="btn btn-primary">+ افزودن محصول جدید</a>
-  <a href="/admin/content" class="btn btn-ghost">ویرایش متن سایت</a>
-  <a href="/admin/messages" class="btn btn-ghost">مشاهده پیام‌ها</a>
+  <a href="/admin/products/new" class="btn btn-primary">➕ افزودن محصول جدید</a>
+  <a href="/admin/products" class="btn btn-ghost">🛏 مدیریت محصولات</a>
+  <a href="/admin/orders" class="btn btn-ghost">📦 مشاهده سفارش‌ها</a>
+  <a href="/admin/messages" class="btn btn-ghost">💬 پیام‌های تماس</a>
+  <a href="/admin/content" class="btn btn-ghost">✏️ ویرایش متن سایت</a>
+</div>
+
+<!-- آخرین سفارش‌ها -->
+<div class="admin-section">
+  <div class="admin-section-header">
+    <span class="admin-section-title">📦 آخرین سفارش‌ها</span>
+    <a href="/admin/orders" class="link-btn">مشاهده همه ←</a>
+  </div>
+  <div class="admin-section-body">
+    <% if (recentOrders && recentOrders.length > 0) { %>
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>مشتری</th>
+            <th>مبلغ</th>
+            <th>وضعیت</th>
+            <th>تاریخ</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% recentOrders.forEach(function(o){ %>
+            <tr>
+              <td><%= o.customer.name %><br><span class="muted"><%= o.customer.phone %></span></td>
+              <td><strong><%= formatToman(o.total) %></strong></td>
+              <td>
+                <span class="status-badge status-<%= o.status %>">
+                  <%= o.status === 'paid' ? '✅ پرداخت‌شده' :
+                      o.status === 'pending_payment' ? '⏳ در انتظار پرداخت' : '❌ لغو شده' %>
+                </span>
+              </td>
+              <td class="muted"><%= new Date(o.createdAt).toLocaleString('fa-IR') %></td>
+            </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    <% } else { %>
+      <div class="empty-state">
+        <div class="empty-state-icon">📦</div>
+        <h3>سفارشی ثبت نشده</h3>
+        <p>وقتی مشتری سفارش بدهد اینجا نمایش داده می‌شود</p>
+      </div>
+    <% } %>
+  </div>
+</div>
+
+<!-- آخرین پیام‌ها -->
+<div class="admin-section">
+  <div class="admin-section-header">
+    <span class="admin-section-title">💬 آخرین پیام‌های تماس</span>
+    <a href="/admin/messages" class="link-btn">مشاهده همه ←</a>
+  </div>
+  <div class="admin-section-body">
+    <% if (recentMessages && recentMessages.length > 0) { %>
+      <table class="admin-table">
+        <thead>
+          <tr><th>نام</th><th>تلفن</th><th>پیام</th><th>تاریخ</th></tr>
+        </thead>
+        <tbody>
+          <% recentMessages.forEach(function(m){ %>
+            <tr>
+              <td><%= m.name %></td>
+              <td><%= m.phone %></td>
+              <td style="max-width:300px;"><%= m.message.length > 80 ? m.message.slice(0,80)+'…' : m.message %></td>
+              <td class="muted"><%= new Date(m.createdAt).toLocaleString('fa-IR') %></td>
+            </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    <% } else { %>
+      <div class="empty-state">
+        <div class="empty-state-icon">💬</div>
+        <h3>پیامی وجود ندارد</h3>
+      </div>
+    <% } %>
+  </div>
 </div>
 
 <%- include('../partials/admin-footer') %>

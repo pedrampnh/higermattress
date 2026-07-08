@@ -1,122 +1,88 @@
 <% pageTitle = 'همه محصولات' %>
 <%- include('partials/header') %>
 
-<div class="container">
-  <div class="page-hero" style="padding-bottom:10px;">
-    <span class="eyebrow">کاتالوگ کامل</span>
+<div class="page-hero">
+  <div class="container">
+    <span class="eyebrow">کاتالوگ</span>
     <h1>همه‌ی مدل‌های تشک هیگر (<%= products.length %>)</h1>
+    <p>با استفاده از فیلترهای سمت راست، تشک مورد نظر خود را بیابید</p>
   </div>
+</div>
 
-  <div class="sec-head" style="margin-top:10px;">
-    <span class="eyebrow">خرید بر اساس تعداد نفرات</span>
-    <h2>انواع تشک خواب بر اساس تعداد نفرات و گروه سنی</h2>
-  </div>
-  <%- include('partials/size-categories', { sizeCategories: sizeCategories, activeSlug: sizeCategory }) %>
+<div class="container">
+  <div class="products-layout">
 
-  <div class="catalog-layout">
-    <aside class="filter-sidebar">
-      <form method="GET" action="/products" id="filterForm">
-        <input type="hidden" name="sort" value="<%= sort %>" id="sortHidden">
+    <!-- فیلتر سایدبار -->
+    <%- include('partials/filter-sidebar', {
+      selectedCategories: selectedCategories,
+      sizeCategories: sizeCategories,
+      sizeCategory: sizeCategory,
+      priceBucket: priceBucket,
+      sort: sort
+    }) %>
 
-        <h3>تعداد نفرات و گروه سنی</h3>
-        <div class="filter-group">
-          <label class="filter-check">
-            <input type="radio" name="sizeCategory" value="" <%= sizeCategory==='' ? 'checked' : '' %> onchange="document.getElementById('filterForm').submit()">
-            همه سایزها
-          </label>
-          <% sizeCategories.forEach(function(c){ %>
-            <label class="filter-check">
-              <input type="radio" name="sizeCategory" value="<%= c.slug %>" <%= sizeCategory===c.slug ? 'checked' : '' %> onchange="document.getElementById('filterForm').submit()">
-              <%= c.label %>
-            </label>
-          <% }) %>
-        </div>
+    <!-- محتوای اصلی -->
+    <div class="products-main">
 
-        <h3 style="margin-top:18px;">لایه‌بندی</h3>
-        <div class="filter-group">
-          <% var lastGroup = null; %>
-          <% categories.forEach(function(c){ %>
-            <% if (c.group !== lastGroup) { lastGroup = c.group; %>
-              <span class="filter-subhead"><%= c.group %></span>
-            <% } %>
-            <label class="filter-check filter-check-sub">
-              <input type="checkbox" name="category" value="<%= c.slug %>"
-                <%= selectedCategories.includes(c.slug) ? 'checked' : '' %>
-                onchange="document.getElementById('filterForm').submit()">
-              <%= c.label %>
-            </label>
-          <% }) %>
-        </div>
-
-        <h3 style="margin-top:18px;">بازه قیمت</h3>
-        <div class="filter-group">
-          <label class="filter-check">
-            <input type="radio" name="priceBucket" value="" <%= priceBucket==='' ? 'checked' : '' %> onchange="document.getElementById('filterForm').submit()">
-            همه قیمت‌ها
-          </label>
-          <label class="filter-check">
-            <input type="radio" name="priceBucket" value="under5" <%= priceBucket==='under5' ? 'checked' : '' %> onchange="document.getElementById('filterForm').submit()">
-            تا ۵ میلیون تومان
-          </label>
-          <label class="filter-check">
-            <input type="radio" name="priceBucket" value="5to10" <%= priceBucket==='5to10' ? 'checked' : '' %> onchange="document.getElementById('filterForm').submit()">
-            ۵ تا ۱۰ میلیون تومان
-          </label>
-          <label class="filter-check">
-            <input type="radio" name="priceBucket" value="10to20" <%= priceBucket==='10to20' ? 'checked' : '' %> onchange="document.getElementById('filterForm').submit()">
-            ۱۰ تا ۲۰ میلیون تومان
-          </label>
-          <label class="filter-check">
-            <input type="radio" name="priceBucket" value="over20" <%= priceBucket==='over20' ? 'checked' : '' %> onchange="document.getElementById('filterForm').submit()">
-            بالای ۲۰ میلیون تومان
-          </label>
-        </div>
-
-        <a href="/products" class="btn btn-ghost btn-full" style="margin-top:20px;">حذف همه فیلترها</a>
-      </form>
-    </aside>
-
-    <div class="catalog-main">
-      <div class="sort-bar">
-        <span class="muted"><%= products.length %> محصول</span>
+      <!-- نوار ابزار -->
+      <div class="products-toolbar">
+        <span class="products-count">
+          <% if (selectedCategories.length > 0 || sizeCategory || priceBucket) { %>
+            <strong><%= products.length %></strong> محصول یافت شد
+          <% } else { %>
+            <strong><%= products.length %></strong> محصول
+          <% } %>
+        </span>
         <form method="GET" action="/products" id="sortForm">
-          <% selectedCategories.forEach(function(c){ %><input type="hidden" name="category" value="<%= c %>"><% }) %>
-          <input type="hidden" name="sizeCategory" value="<%= sizeCategory %>">
-          <input type="hidden" name="priceBucket" value="<%= priceBucket %>">
-          <select name="sort" onchange="document.getElementById('sortForm').submit()">
-            <option value="default" <%= sort==='default' ? 'selected' : '' %>>مرتب‌سازی پیش‌فرض</option>
-            <option value="price_asc" <%= sort==='price_asc' ? 'selected' : '' %>>قیمت: ارزان‌ترین</option>
-            <option value="price_desc" <%= sort==='price_desc' ? 'selected' : '' %>>قیمت: گران‌ترین</option>
-            <option value="name" <%= sort==='name' ? 'selected' : '' %>>نام (الفبایی)</option>
-            <option value="tier" <%= sort==='tier' ? 'selected' : '' %>>درجه کیفی</option>
+          <% selectedCategories.forEach(function(c){ %>
+            <input type="hidden" name="category" value="<%= c %>">
+          <% }); %>
+          <% if (sizeCategory) { %><input type="hidden" name="sizeCategory" value="<%= sizeCategory %>"><% } %>
+          <% if (priceBucket) { %><input type="hidden" name="priceBucket" value="<%= priceBucket %>"><% } %>
+          <select name="sort" class="sort-select" onchange="document.getElementById('sortForm').submit()">
+            <option value="default" <%= sort==='default' ? 'selected':'' %>>مرتب‌سازی پیش‌فرض</option>
+            <option value="price_asc" <%= sort==='price_asc' ? 'selected':'' %>>ارزان‌ترین</option>
+            <option value="price_desc" <%= sort==='price_desc' ? 'selected':'' %>>گران‌ترین</option>
+            <option value="name" <%= sort==='name' ? 'selected':'' %>>نام (الفبا)</option>
+            <option value="tier" <%= sort==='tier' ? 'selected':'' %>>درجه کیفی</option>
           </select>
         </form>
       </div>
 
+      <!-- گرید محصولات -->
       <% if (products.length === 0) { %>
-        <div class="empty-note">
-          <p>محصولی با این فیلترها پیدا نشد.</p>
-          <br>
-          <a href="/products" class="btn btn-primary">حذف فیلترها</a>
+        <div style="text-align:center; padding:80px 20px; color:var(--ink-500);">
+          <div style="font-size:3rem; margin-bottom:16px;">🔍</div>
+          <h3 style="margin-bottom:8px;">محصولی یافت نشد</h3>
+          <p>فیلترهای دیگری را امتحان کنید یا <a href="/products" style="color:var(--honey-600);text-decoration:underline;">همه محصولات</a> را ببینید</p>
         </div>
       <% } else { %>
-        <div class="products-grid catalog-grid">
-          <% products.forEach(function(p){ %>
-            <a class="product-card" href="/product/<%= p.slug %>">
-              <div class="product-thumb"><%= p.enName.toUpperCase() %></div>
-              <span class="product-tag">درجه <%= p.tier %> · <%= categories.find(c => c.slug === p.category).label %></span>
+        <div class="products-grid" style="padding-top:0; border-top:none;">
+          <% products.forEach(function(p) {
+            const minPrice = Object.values(p.prices).filter(v => v > 0).sort((a,b)=>a-b)[0] || 0;
+          %>
+            <a href="/product/<%= p.slug %>" class="product-card">
+              <div class="product-thumb">تصویر</div>
+              <span class="product-tag">
+                <%= p.category === 'spring-pocket' ? 'فنر منفصل' :
+                    p.category === 'spring-bonnell' ? 'فنر متصل' :
+                    p.category === 'memory-foam' ? 'مموری فوم' :
+                    p.category === 'foam' ? 'اسفنجی' : p.category %>
+              </span>
               <h3><%= p.faName %></h3>
               <span class="en-name"><%= p.enName %></span>
-              <span class="from-price">
-                <small><%= activeSizeCategory ? activeSizeCategory.label + ' (' + activeSizeCategory.sizeLabel + ')' : 'شروع از (سایز ۷۰×۱۳۰)' %></small>
-                <%= formatToman(p.prices[referenceSize]) %>
-              </span>
+              <div style="font-size:0.75rem; color:var(--ink-500);">درجه <%= p.tier %></div>
+              <div class="from-price">
+                از <%= formatToman(minPrice) %>
+                <small>تومان</small>
+              </div>
             </a>
-          <% }) %>
+          <% }); %>
         </div>
       <% } %>
-    </div>
-  </div>
+
+    </div><!-- /products-main -->
+  </div><!-- /products-layout -->
 </div>
 
 <%- include('partials/footer') %>
