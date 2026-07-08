@@ -211,3 +211,27 @@ footer{ background:var(--ink-900); color:rgba(255,255,255,0.55); font-size:0.86r
   .filter-sidebar{ width:100%; position:static; }
   .category-teaser{ grid-template-columns:1fr 1fr; }
 }
+
+/* Size / age-group category cards (family, double, single, kids...) */
+.size-cat-grid{ display:grid; grid-template-columns:repeat(6,1fr); gap:2px; background:var(--linen-200); margin:10px 0 40px; }
+.size-cat-card{
+  background:var(--white); padding:26px 14px 22px; text-align:center; border:none;
+  display:flex; flex-direction:column; align-items:center; gap:10px; transition:background .2s;
+}
+.size-cat-card:hover{ background:var(--linen-50); }
+.size-cat-card.is-active{ background:var(--ink-900); }
+.size-cat-card.is-active .size-cat-name{ color:var(--white); }
+.size-cat-card.is-active .size-cat-dim{ color:var(--honey-500); }
+.size-cat-card.is-active .size-cat-icon svg rect,
+.size-cat-card.is-active .size-cat-icon svg circle{ fill:rgba(255,255,255,0.35); }
+.size-cat-icon{ width:78px; height:70px; display:flex; align-items:center; justify-content:center; }
+.size-cat-icon svg{ width:100%; height:100%; }
+.size-cat-name{ font-weight:600; color:var(--ink-900); font-size:0.86rem; }
+.size-cat-dim{ font-family:'Space Grotesk',sans-serif; font-size:0.66rem; color:var(--ink-500); letter-spacing:0.03em; }
+
+@media (max-width:920px){
+  .size-cat-grid{ grid-template-columns:repeat(3,1fr); }
+}
+@media (max-width:560px){
+  .size-cat-grid{ grid-template-columns:1fr 1fr; }
+}

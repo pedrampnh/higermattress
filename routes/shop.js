@@ -47,7 +47,7 @@ router.get('/', (req, res) => {
   // just a small teaser on the homepage; full catalog with filters lives at /products
   const featured = all.slice(0, 6);
   res.render('home', {
-    featured, categories: productsStore.CATEGORIES, formatToman, content,
+    featured, categories: productsStore.CATEGORIES, sizeCategories: productsStore.SIZE_CATEGORIES, formatToman, content,
   });
 });
 
@@ -63,9 +63,17 @@ router.get('/products', (req, res) => {
     list = list.filter(p => selectedCategories.includes(p.category));
   }
 
+  // size-category filter (by number of sleepers / age group)
+  const sizeCategory = req.query.sizeCategory || '';
+  const activeSizeCategory = productsStore.getSizeCategory(sizeCategory);
+  if (activeSizeCategory) {
+    list = list.filter(p => activeSizeCategory.sizes.some(s => p.prices[s]));
+  }
+
   // price bucket filter (single select)
   const priceBucket = req.query.priceBucket || '';
-  const priceOf = p => p.prices['160x200'];
+  const referenceSize = activeSizeCategory ? activeSizeCategory.sizes[0] : '160x200';
+  const priceOf = p => p.prices[referenceSize];
   if (priceBucket === 'under5') list = list.filter(p => priceOf(p) <= 5000000);
   else if (priceBucket === '5to10') list = list.filter(p => priceOf(p) > 5000000 && priceOf(p) <= 10000000);
   else if (priceBucket === '10to20') list = list.filter(p => priceOf(p) > 10000000 && priceOf(p) <= 20000000);
@@ -81,7 +89,11 @@ router.get('/products', (req, res) => {
   res.render('products-page', {
     products: list,
     categories: productsStore.CATEGORIES,
+    sizeCategories: productsStore.SIZE_CATEGORIES,
     selectedCategories,
+    sizeCategory,
+    activeSizeCategory,
+    referenceSize,
     priceBucket,
     sort,
     formatToman,

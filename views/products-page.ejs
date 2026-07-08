@@ -7,12 +7,32 @@
     <h1>همه‌ی مدل‌های تشک هیگر (<%= products.length %>)</h1>
   </div>
 
+  <div class="sec-head" style="margin-top:10px;">
+    <span class="eyebrow">خرید بر اساس تعداد نفرات</span>
+    <h2>انواع تشک خواب بر اساس تعداد نفرات و گروه سنی</h2>
+  </div>
+  <%- include('partials/size-categories', { sizeCategories: sizeCategories, activeSlug: sizeCategory }) %>
+
   <div class="catalog-layout">
     <aside class="filter-sidebar">
       <form method="GET" action="/products" id="filterForm">
         <input type="hidden" name="sort" value="<%= sort %>" id="sortHidden">
 
-        <h3>لایه‌بندی</h3>
+        <h3>تعداد نفرات و گروه سنی</h3>
+        <div class="filter-group">
+          <label class="filter-check">
+            <input type="radio" name="sizeCategory" value="" <%= sizeCategory==='' ? 'checked' : '' %> onchange="document.getElementById('filterForm').submit()">
+            همه سایزها
+          </label>
+          <% sizeCategories.forEach(function(c){ %>
+            <label class="filter-check">
+              <input type="radio" name="sizeCategory" value="<%= c.slug %>" <%= sizeCategory===c.slug ? 'checked' : '' %> onchange="document.getElementById('filterForm').submit()">
+              <%= c.label %>
+            </label>
+          <% }) %>
+        </div>
+
+        <h3 style="margin-top:18px;">لایه‌بندی</h3>
         <div class="filter-group">
           <% var lastGroup = null; %>
           <% categories.forEach(function(c){ %>
@@ -61,6 +81,7 @@
         <span class="muted"><%= products.length %> محصول</span>
         <form method="GET" action="/products" id="sortForm">
           <% selectedCategories.forEach(function(c){ %><input type="hidden" name="category" value="<%= c %>"><% }) %>
+          <input type="hidden" name="sizeCategory" value="<%= sizeCategory %>">
           <input type="hidden" name="priceBucket" value="<%= priceBucket %>">
           <select name="sort" onchange="document.getElementById('sortForm').submit()">
             <option value="default" <%= sort==='default' ? 'selected' : '' %>>مرتب‌سازی پیش‌فرض</option>
@@ -86,7 +107,10 @@
               <span class="product-tag">درجه <%= p.tier %> · <%= categories.find(c => c.slug === p.category).label %></span>
               <h3><%= p.faName %></h3>
               <span class="en-name"><%= p.enName %></span>
-              <span class="from-price"><small>شروع از (سایز ۷۰×۱۳۰)</small><%= formatToman(p.prices['70x130']) %></span>
+              <span class="from-price">
+                <small><%= activeSizeCategory ? activeSizeCategory.label + ' (' + activeSizeCategory.sizeLabel + ')' : 'شروع از (سایز ۷۰×۱۳۰)' %></small>
+                <%= formatToman(p.prices[referenceSize]) %>
+              </span>
             </a>
           <% }) %>
         </div>
