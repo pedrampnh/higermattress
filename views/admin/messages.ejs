@@ -1,61 +1,24 @@
 <% pageTitle = 'پیام‌های تماس' %>
 <%- include('../partials/admin-header') %>
 
-<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-  <div>
-    <div class="admin-page-title">پیام‌های تماس</div>
-    <div class="admin-page-subtitle"><%= messages.length %> پیام دریافتی</div>
-  </div>
-</div>
+<h1 style="margin-bottom:20px;">پیام‌های تماس (<%= messages.length %>)</h1>
 
-<!-- جستجو -->
-<div class="admin-search-bar">
-  <input type="text" id="msgSearch" placeholder="جستجو در پیام‌ها..." oninput="filterMessages()">
-</div>
-
-<div class="admin-section">
-  <div class="admin-section-body">
-    <% if (messages.length === 0) { %>
-      <div class="empty-state">
-        <div class="empty-state-icon">💬</div>
-        <h3>هنوز پیامی دریافت نشده</h3>
-        <p>پیام‌های فرم تماس اینجا نمایش داده می‌شوند</p>
-      </div>
-    <% } else { %>
-      <table class="admin-table" id="msgsTable">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>نام</th>
-            <th>تلفن</th>
-            <th>پیام</th>
-            <th>تاریخ</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% messages.forEach(function(m, i){ %>
-            <tr data-search="<%= (m.name + ' ' + m.phone + ' ' + m.message).toLowerCase() %>">
-              <td class="muted"><%= i + 1 %></td>
-              <td><strong><%= m.name %></strong></td>
-              <td><%= m.phone %></td>
-              <td style="max-width:400px; line-height:1.6;"><%= m.message %></td>
-              <td class="muted" style="white-space:nowrap;"><%= new Date(m.createdAt).toLocaleString('fa-IR') %></td>
-            </tr>
-          <% }); %>
-        </tbody>
-      </table>
-    <% } %>
-  </div>
-</div>
-
-<script>
-function filterMessages() {
-  const search = document.getElementById('msgSearch').value.toLowerCase();
-  document.querySelectorAll('#msgsTable tbody tr').forEach(function(row) {
-    const rowSearch = (row.dataset.search || '');
-    row.style.display = (!search || rowSearch.includes(search)) ? '' : 'none';
-  });
-}
-</script>
+<% if (messages.length === 0) { %>
+  <p class="muted">هنوز پیامی ثبت نشده است.</p>
+<% } else { %>
+  <table class="admin-table">
+    <thead><tr><th>نام</th><th>تلفن</th><th>پیام</th><th>تاریخ</th></tr></thead>
+    <tbody>
+      <% messages.forEach(function(m){ %>
+        <tr>
+          <td><%= m.name %></td>
+          <td><%= m.phone %></td>
+          <td><%= m.message %></td>
+          <td class="muted"><%= new Date(m.createdAt).toLocaleString('fa-IR') %></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+<% } %>
 
 <%- include('../partials/admin-footer') %>

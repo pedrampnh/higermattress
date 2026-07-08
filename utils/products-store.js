@@ -17,24 +17,6 @@ function categoryLabel(slug) {
   return c.group ? `${c.group} — ${c.label}` : c.label;
 }
 
-const SIZE_CATEGORIES = [
-  { slug: 'family', label: 'تشک خانواده', icon: 'family', sizes: ['200x200'], sizeLabel: '۲۰۰×۲۰۰' },
-  { slug: 'double-large', label: 'تشک دو نفره بزرگ', icon: 'double-large', sizes: ['180x200'], sizeLabel: '۱۸۰×۲۰۰' },
-  { slug: 'double', label: 'تشک دو نفره', icon: 'double', sizes: ['160x200'], sizeLabel: '۱۶۰×۲۰۰' },
-  { slug: 'single-large', label: 'تشک یک نفره بزرگ', icon: 'single-large', sizes: ['140x200'], sizeLabel: '۱۴۰×۲۰۰' },
-  { slug: 'single', label: 'تشک یک نفره', icon: 'single', sizes: ['90x200', '100x200', '120x200'], sizeLabel: '۹۰ تا ۱۲۰×۲۰۰' },
-  { slug: 'kids', label: 'تشک کودک و نوجوان', icon: 'kids', sizes: ['70x130', '80x180'], sizeLabel: '۷۰×۱۳۰ تا ۸۰×۱۸۰' },
-];
-
-function getSizeCategory(slug) {
-  return SIZE_CATEGORIES.find(c => c.slug === slug) || null;
-}
-
-function minSizeInCategory(sizeCategorySlug) {
-  const c = getSizeCategory(sizeCategorySlug);
-  return c ? c.sizes[0] : null;
-}
-
 function ensureFile() {
   if (!fs.existsSync(FILE)) fs.writeFileSync(FILE, '[]', 'utf8');
 }
@@ -124,7 +106,4 @@ function remove(slug) {
   return next.length !== list.length;
 }
 
-module.exports = {
-  SIZES, CATEGORIES, categoryLabel, getAll, getByTier, getByCategory, getBySlug, create, update, remove,
-  SIZE_CATEGORIES, getSizeCategory, minSizeInCategory,
-};
+module.exports = { SIZES, CATEGORIES, categoryLabel, getAll, getByTier, getByCategory, getBySlug, create, update, remove };

@@ -1,101 +1,26 @@
 <% pageTitle = 'سفارش‌ها' %>
 <%- include('../partials/admin-header') %>
 
-<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-  <div>
-    <div class="admin-page-title">سفارش‌ها</div>
-    <div class="admin-page-subtitle"><%= orders.length %> سفارش ثبت شده</div>
-  </div>
-  <div style="display:flex;gap:10px;">
-    <span class="tag tag-foam" style="padding:6px 12px;">✅ پرداخت‌شده: <%= orders.filter(o=>o.status==='paid').length %></span>
-    <span class="tag tag-spring" style="padding:6px 12px;">⏳ در انتظار: <%= orders.filter(o=>o.status==='pending_payment').length %></span>
-  </div>
-</div>
+<h1 style="margin-bottom:20px;">سفارش‌ها (<%= orders.length %>)</h1>
 
-<!-- فیلتر وضعیت -->
-<div class="admin-search-bar">
-  <input type="text" id="orderSearch" placeholder="جستجو بر اساس نام مشتری یا تلفن..." oninput="filterOrders()">
-  <select id="statusFilter" onchange="filterOrders()" style="padding:9px 14px; border:1.5px solid var(--linen-200); border-radius:6px; font-size:0.86rem; color:var(--ink-900);">
-    <option value="">همه وضعیت‌ها</option>
-    <option value="paid">پرداخت‌شده</option>
-    <option value="pending_payment">در انتظار پرداخت</option>
-    <option value="canceled_by_user">لغو شده</option>
-  </select>
-</div>
-
-<div class="admin-section">
-  <div class="admin-section-body">
-    <% if (orders.length === 0) { %>
-      <div class="empty-state">
-        <div class="empty-state-icon">📦</div>
-        <h3>هنوز سفارشی ثبت نشده</h3>
-        <p>وقتی مشتری سفارش ثبت کند، اینجا نمایش داده می‌شود</p>
-      </div>
-    <% } else { %>
-      <table class="admin-table" id="ordersTable">
-        <thead>
-          <tr>
-            <th>مشتری</th>
-            <th>آدرس</th>
-            <th>اقلام</th>
-            <th>مبلغ کل</th>
-            <th>وضعیت</th>
-            <th>کد پیگیری</th>
-            <th>تاریخ</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% orders.forEach(function(o){ %>
-            <tr data-search="<%= (o.customer.name + ' ' + o.customer.phone).toLowerCase() %>"
-                data-status="<%= o.status %>">
-              <td>
-                <strong><%= o.customer.name %></strong>
-                <div class="muted"><%= o.customer.phone %></div>
-              </td>
-              <td style="max-width:160px;">
-                <span class="muted" style="font-size:0.78rem; line-height:1.4;"><%= o.customer.address %></span>
-              </td>
-              <td>
-                <ul class="order-items-list" style="list-style:none;padding:0;">
-                  <% o.items.forEach(function(it){ %>
-                    <li>
-                      <%= it.faName %>
-                      <span class="muted">(<%= it.size.replace('x',' × ') %>) × <%= it.qty %></span>
-                    </li>
-                  <% }); %>
-                </ul>
-              </td>
-              <td><strong><%= formatToman(o.total) %></strong></td>
-              <td>
-                <span class="status-badge status-<%= o.status %>">
-                  <%= o.status === 'paid' ? '✅ پرداخت‌شده' :
-                      o.status === 'pending_payment' ? '⏳ در انتظار' :
-                      o.status === 'canceled_by_user' ? '❌ لغو شده' :
-                      o.status %>
-                </span>
-              </td>
-              <td class="muted"><%= o.zarinpalRefId || '—' %></td>
-              <td class="muted"><%= new Date(o.createdAt).toLocaleString('fa-IR') %></td>
-            </tr>
-          <% }); %>
-        </tbody>
-      </table>
-    <% } %>
-  </div>
-</div>
-
-<script>
-function filterOrders() {
-  const search = document.getElementById('orderSearch').value.toLowerCase();
-  const status = document.getElementById('statusFilter').value;
-  document.querySelectorAll('#ordersTable tbody tr').forEach(function(row) {
-    const rowSearch = (row.dataset.search || '');
-    const rowStatus = (row.dataset.status || '');
-    const matchSearch = !search || rowSearch.includes(search);
-    const matchStatus = !status || rowStatus === status;
-    row.style.display = (matchSearch && matchStatus) ? '' : 'none';
-  });
-}
-</script>
+<% if (orders.length === 0) { %>
+  <p class="muted">هنوز سفارشی ثبت نشده است.</p>
+<% } else { %>
+  <table class="admin-table">
+    <thead><tr><th>مشتری</th><th>اقلام</th><th>مبلغ</th><th>وضعیت</th><th>کد پیگیری</th><th>تاریخ</th></tr></thead>
+    <tbody>
+      <% orders.forEach(function(o){ %>
+        <tr>
+          <td><%= o.customer.name %><br><span class="muted"><%= o.customer.phone %></span></td>
+          <td><% o.items.forEach(function(it){ %><%= it.faName %> (<%= it.size.replace('x',' × ') %>) × <%= it.qty %><br><% }) %></td>
+          <td><%= formatToman(o.total) %></td>
+          <td><span class="status-badge status-<%= o.status %>"><%= o.status %></span></td>
+          <td><%= o.zarinpalRefId || '—' %></td>
+          <td class="muted"><%= new Date(o.createdAt).toLocaleString('fa-IR') %></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+<% } %>
 
 <%- include('../partials/admin-footer') %>

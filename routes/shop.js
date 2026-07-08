@@ -44,13 +44,10 @@ function cartTotal(lines) {
 router.get('/', (req, res) => {
   const content = contentStore.get();
   const all = productsStore.getAll();
+  // just a small teaser on the homepage; full catalog with filters lives at /products
   const featured = all.slice(0, 6);
   res.render('home', {
-    featured,
-    categories: productsStore.CATEGORIES,
-    sizeCategories: productsStore.SIZE_CATEGORIES,
-    formatToman,
-    content,
+    featured, categories: productsStore.CATEGORIES, formatToman, content,
   });
 });
 
@@ -60,29 +57,16 @@ router.get('/products', (req, res) => {
   let list = productsStore.getAll();
 
   // category filter (multi-select checkboxes)
-  // پشتیبانی از هر دو روش: ?category=x&category=y و ?category[]=x
   let selectedCategories = req.query.category || [];
   if (!Array.isArray(selectedCategories)) selectedCategories = [selectedCategories];
-  // فیلتر کردن مقادیر خالی
-  selectedCategories = selectedCategories.filter(c => c && c.trim() !== '');
-
   if (selectedCategories.length > 0) {
     list = list.filter(p => selectedCategories.includes(p.category));
   }
 
-  // size-category filter
-  const sizeCategory = req.query.sizeCategory || '';
-  const activeSizeCategory = productsStore.getSizeCategory(sizeCategory);
-  if (activeSizeCategory) {
-    list = list.filter(p => activeSizeCategory.sizes.some(s => p.prices[s] > 0));
-  }
-
-  // price bucket filter
+  // price bucket filter (single select)
   const priceBucket = req.query.priceBucket || '';
-  const referenceSize = activeSizeCategory ? activeSizeCategory.sizes[0] : '160x200';
-  const priceOf = p => p.prices[referenceSize] || 0;
-
-  if (priceBucket === 'under5') list = list.filter(p => priceOf(p) > 0 && priceOf(p) <= 5000000);
+  const priceOf = p => p.prices['160x200'];
+  if (priceBucket === 'under5') list = list.filter(p => priceOf(p) <= 5000000);
   else if (priceBucket === '5to10') list = list.filter(p => priceOf(p) > 5000000 && priceOf(p) <= 10000000);
   else if (priceBucket === '10to20') list = list.filter(p => priceOf(p) > 10000000 && priceOf(p) <= 20000000);
   else if (priceBucket === 'over20') list = list.filter(p => priceOf(p) > 20000000);
@@ -97,11 +81,7 @@ router.get('/products', (req, res) => {
   res.render('products-page', {
     products: list,
     categories: productsStore.CATEGORIES,
-    sizeCategories: productsStore.SIZE_CATEGORIES,
     selectedCategories,
-    sizeCategory,
-    activeSizeCategory,
-    referenceSize,
     priceBucket,
     sort,
     formatToman,
@@ -151,6 +131,9 @@ router.post('/cart/remove', (req, res) => {
 
 router.get('/cart', (req, res) => {
   const cart = getCart(req);
+  const lines = cartToLines(cart);
+  // attach the session key back onto each line for form actions
+  Object.keys(cart).forEach((key, i) => {});
   const linesWithKeys = Object.entries(cart).map(([key, item]) => {
     const product = findProduct(item.slug);
     if (!product) return null;
@@ -196,7 +179,7 @@ router.post('/checkout', async (req, res) => {
   const total = cartTotal(lines);
   const orderId = crypto.randomUUID();
 
-  store.createOrder({
+  const order = store.createOrder({
     id: orderId,
     createdAt: new Date().toISOString(),
     customer: { name, phone, address },
@@ -220,9 +203,14 @@ router.post('/checkout', async (req, res) => {
     store.updateOrder(orderId, { zarinpalAuthority: authority });
     return res.redirect(payUrl);
   } catch (err) {
-    console.error('ZarinPal error:', err);
-    store.updateOrder(orderId, { status: 'payment_request_failed' });
-    return res.redirect('/checkout?error=' + encodeURIComponent('خطا در اتصال به درگاه پرداخت. لطفاً دوباره تلاش کنید.'));
+    store.updateOrder(orderId, { status: 'payment_request_failed', error: String(err.message || err) });
+    return res.render('payment-result', {
+      success: false,
+      message: 'اتصال به درگاه پرداخت با خطا مواجه شد. لطفاً دوباره تلاش کنید یا با پشتیبانی تماس بگیرید.',
+      detail: String(err.message || err),
+      order: null,
+      formatToman,
+    });
   }
 });
 
@@ -234,34 +222,66 @@ router.get('/payment/callback', async (req, res) => {
 
   if (Status !== 'OK') {
     store.updateOrder(orderId, { status: 'canceled_by_user' });
-    return res.render('payment-result', { success: false, order, refId: null, formatToman });
+    return res.render('payment-result', {
+      success: false,
+      message: 'پرداخت لغو شد. سفارش شما ثبت نشد.',
+      detail: null,
+      order,
+      formatToman,
+    });
   }
 
   try {
-    const { refId } = await zarinpal.verifyPayment({ authority: Authority, amount: order.total });
-    store.updateOrder(orderId, { status: 'paid', zarinpalRefId: refId });
-    req.session.cart = {};
-    return res.render('payment-result', { success: true, order, refId, formatToman });
-  } catch (err) {
-    console.error('Verify error:', err);
+    const result = await zarinpal.verifyPayment({ amount: order.total, authority: Authority });
+    if (result.success) {
+      const updated = store.updateOrder(orderId, {
+        status: 'paid',
+        zarinpalRefId: result.refId,
+      });
+      // clear the cart on successful payment
+      req.session.cart = {};
+      return res.render('payment-result', {
+        success: true,
+        message: 'پرداخت با موفقیت انجام شد. سفارش شما ثبت شد.',
+        detail: null,
+        order: updated,
+        formatToman,
+      });
+    }
     store.updateOrder(orderId, { status: 'verify_failed' });
-    return res.render('payment-result', { success: false, order, refId: null, formatToman });
+    return res.render('payment-result', {
+      success: false,
+      message: 'تأیید پرداخت ناموفق بود.',
+      detail: JSON.stringify(result.raw && result.raw.errors ? result.raw.errors : result.raw),
+      order,
+      formatToman,
+    });
+  } catch (err) {
+    store.updateOrder(orderId, { status: 'verify_error', error: String(err.message || err) });
+    return res.render('payment-result', {
+      success: false,
+      message: 'خطا در ارتباط با درگاه هنگام تأیید پرداخت.',
+      detail: String(err.message || err),
+      order,
+      formatToman,
+    });
   }
 });
 
 // ---------------- Contact ----------------
 router.get('/contact', (req, res) => {
   const content = contentStore.get();
-  res.render('contact', { content, sent: req.query.sent || false, error: null });
+  res.render('contact', { sent: req.query.sent || false, content });
 });
 
 router.post('/contact', (req, res) => {
   const { name, phone, message } = req.body;
-  if (!name || !phone || !message) {
-    const content = contentStore.get();
-    return res.render('contact', { content, sent: false, error: 'لطفاً تمام فیلدها را پر کنید' });
-  }
-  store.saveMessage({ name, phone, message, createdAt: new Date().toISOString() });
+  if (!name || !phone || !message) return res.redirect('/contact');
+  store.saveMessage({
+    id: crypto.randomUUID(),
+    createdAt: new Date().toISOString(),
+    name, phone, message,
+  });
   res.redirect('/contact?sent=1');
 });
 

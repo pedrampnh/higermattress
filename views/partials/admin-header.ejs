@@ -3,53 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><%= typeof pageTitle !== 'undefined' ? pageTitle + ' | پنل هیگر' : 'پنل مدیریت هیگر' %></title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <title><%= typeof pageTitle !== 'undefined' ? pageTitle + ' | پنل مدیریت هیگر' : 'پنل مدیریت هیگر' %></title>
   <link rel="stylesheet" href="/css/style.css">
   <link rel="stylesheet" href="/css/admin.css">
 </head>
 <body class="admin-body">
 <div class="admin-shell">
-
-  <!-- Sidebar -->
   <aside class="admin-sidebar">
-    <div class="admin-brand">
-      <div class="logo" style="margin-bottom:28px; align-items:flex-start;">
-        <b style="color:var(--white);font-size:1.2rem;">هیگر</b>
-        <span style="font-size:0.48rem;letter-spacing:.28em;color:var(--honey-500);">ADMIN PANEL</span>
-      </div>
+    <div class="logo" style="margin-bottom:30px;">
+      <b>هیگر</b>
+      <span>پنل مدیریت</span>
     </div>
-
     <nav class="admin-nav">
-      <a href="/admin" class="admin-nav-item <%= typeof pageTitle !== 'undefined' && pageTitle === 'داشبورد' ? 'active' : '' %>">
-        <span class="nav-icon">📊</span> داشبورد
-      </a>
-      <a href="/admin/products" class="admin-nav-item <%= typeof pageTitle !== 'undefined' && pageTitle === 'محصولات' ? 'active' : '' %>">
-        <span class="nav-icon">🛏</span> مدیریت محصولات
-      </a>
-      <a href="/admin/content" class="admin-nav-item <%= typeof pageTitle !== 'undefined' && pageTitle === 'متن سایت' ? 'active' : '' %>">
-        <span class="nav-icon">✏️</span> متن و محتوای سایت
-      </a>
-      <a href="/admin/orders" class="admin-nav-item <%= typeof pageTitle !== 'undefined' && pageTitle === 'سفارش‌ها' ? 'active' : '' %>">
-        <span class="nav-icon">📦</span> سفارش‌ها
-      </a>
-      <a href="/admin/messages" class="admin-nav-item <%= typeof pageTitle !== 'undefined' && pageTitle === 'پیام‌های تماس' ? 'active' : '' %>">
-        <span class="nav-icon">💬</span> پیام‌های تماس
-      </a>
-
-      <div class="nav-divider"></div>
-
-      <a href="/" target="_blank" class="admin-nav-item">
-        <span class="nav-icon">🌐</span> مشاهده سایت ↗
-      </a>
-      <form action="/admin/logout" method="POST" style="margin:0;">
-        <button type="submit" class="admin-nav-item admin-nav-logout">
-          <span class="nav-icon">🚪</span> خروج
-        </button>
-      </form>
+      <a href="/admin">داشبورد</a>
+      <a href="/admin/products">محصولات</a>
+      <a href="/admin/content">متن سایت</a>
+      <a href="/admin/messages">پیام‌های تماس</a>
+      <a href="/admin/orders">سفارش‌ها</a>
+      <a href="/" target="_blank">مشاهده سایت ↗</a>
     </nav>
+    <form method="POST" action="/admin/logout" style="margin-top:auto;">
+      <button type="submit" class="btn-ghost btn btn-full" style="border-color:rgba(255,255,255,0.3); color:#fff;">خروج</button>
+    </form>
   </aside>
-
-  <!-- Main content -->
   <main class="admin-main">

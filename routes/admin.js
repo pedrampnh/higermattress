@@ -36,20 +36,11 @@ router.get('/', (req, res) => {
   const productCount = productsStore.getAll().length;
   const messages = store.allMessages();
   const orders = store.allOrders();
-
-  // آخرین ۵ سفارش (جدیدترین)
-  const recentOrders = orders.slice().reverse().slice(0, 5);
-  // آخرین ۵ پیام
-  const recentMessages = messages.slice().reverse().slice(0, 5);
-
   res.render('admin/dashboard', {
     productCount,
     messageCount: messages.length,
     orderCount: orders.length,
     paidOrderCount: orders.filter(o => o.status === 'paid').length,
-    recentOrders,
-    recentMessages,
-    formatToman,
   });
 });
 
@@ -66,12 +57,7 @@ router.get('/products/new', (req, res) => {
 router.post('/products/new', (req, res) => {
   const { faName, enName, tier, category, ...rest } = req.body;
   if (!faName || !enName) {
-    return res.render('admin/product-form', {
-      product: req.body,
-      SIZES,
-      CATEGORIES: productsStore.CATEGORIES,
-      error: 'نام فارسی و انگلیسی الزامی است'
-    });
+    return res.render('admin/product-form', { product: req.body, SIZES, CATEGORIES: productsStore.CATEGORIES, error: 'نام فارسی و انگلیسی الزامی است' });
   }
   const prices = {};
   SIZES.forEach(s => { prices[s] = rest[`price_${s}`]; });
