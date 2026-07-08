@@ -1,0 +1,97 @@
+<% pageTitle = 'همه محصولات' %>
+<%- include('partials/header') %>
+
+<div class="page-hero">
+  <div class="container">
+    <span class="eyebrow">کاتالوگ</span>
+    <h1>همه‌ی مدل‌های تشک هیگر (<%= products.length %>)</h1>
+    <p>با استفاده از فیلترهای سمت راست، تشک مورد نظر خود را بیابید</p>
+  </div>
+</div>
+
+<div class="container">
+  <div class="products-layout">
+
+    <!-- فیلتر سایدبار -->
+    <%- include('partials/filter-sidebar', {
+      selectedCategories: selectedCategories,
+      sizeCategories: sizeCategories,
+      sizeCategory: sizeCategory,
+      priceBucket: priceBucket,
+      sort: sort
+    }) %>
+
+    <!-- محتوای اصلی -->
+    <div class="products-main">
+
+      <!-- نوار ابزار -->
+      <div class="products-toolbar">
+        <span class="products-count">
+          <% if (selectedCategories.length > 0 || sizeCategory || priceBucket) { %>
+            <strong><%= products.length %></strong> محصول یافت شد
+          <% } else { %>
+            <strong><%= products.length %></strong> محصول
+          <% } %>
+        </span>
+        <form method="GET" action="/products" id="sortForm">
+          <% selectedCategories.forEach(function(c){ %>
+            <input type="hidden" name="category" value="<%= c %>">
+          <% }); %>
+          <% if (sizeCategory) { %><input type="hidden" name="sizeCategory" value="<%= sizeCategory %>"><% } %>
+          <% if (priceBucket) { %><input type="hidden" name="priceBucket" value="<%= priceBucket %>"><% } %>
+          <select name="sort" class="sort-select" onchange="document.getElementById('sortForm').submit()">
+            <option value="default" <%= sort==='default' ? 'selected':'' %>>مرتب‌سازی پیش‌فرض</option>
+            <option value="price_asc" <%= sort==='price_asc' ? 'selected':'' %>>ارزان‌ترین</option>
+            <option value="price_desc" <%= sort==='price_desc' ? 'selected':'' %>>گران‌ترین</option>
+            <option value="name" <%= sort==='name' ? 'selected':'' %>>نام (الفبا)</option>
+            <option value="tier" <%= sort==='tier' ? 'selected':'' %>>درجه کیفی</option>
+          </select>
+        </form>
+      </div>
+
+      <!-- گرید محصولات -->
+      <% if (products.length === 0) { %>
+        <div style="text-align:center; padding:80px 20px; color:var(--ink-500);">
+          <div style="font-size:3rem; margin-bottom:16px;">🔍</div>
+          <h3 style="margin-bottom:8px;">محصولی یافت نشد</h3>
+          <p>فیلترهای دیگری را امتحان کنید یا <a href="/products" style="color:var(--honey-600);text-decoration:underline;">همه محصولات</a> را ببینید</p>
+        </div>
+      <% } else { %>
+        <div class="products-grid" style="padding-top:0; border-top:none;">
+          <% products.forEach(function(p) {
+            // اگر فیلتر سایز انتخاب شده، قیمت همان سایز مشخص را نشان بده
+            // در غیر این صورت، کمترین قیمت از همه سایزها را نشان بده
+            const hasActiveSize = activeSizeCategory && referenceSize;
+            const displayPrice = hasActiveSize
+              ? (p.prices[referenceSize] || 0)
+              : (Object.values(p.prices).filter(v => v > 0).sort((a,b)=>a-b)[0] || 0);
+          %>
+            <a href="/product/<%= p.slug %>" class="product-card">
+              <div class="product-thumb">تصویر</div>
+              <span class="product-tag">
+                <%= p.category === 'spring-pocket' ? 'فنر منفصل' :
+                    p.category === 'spring-bonnell' ? 'فنر متصل' :
+                    p.category === 'memory-foam' ? 'مموری فوم' :
+                    p.category === 'foam' ? 'اسفنجی' : p.category %>
+              </span>
+              <h3><%= p.faName %></h3>
+              <span class="en-name"><%= p.enName %></span>
+              <div style="font-size:0.75rem; color:var(--ink-500);">درجه <%= p.tier %></div>
+              <div class="from-price">
+                <% if (hasActiveSize) { %>
+                  <%= formatToman(displayPrice) %>
+                <% } else { %>
+                  از <%= formatToman(displayPrice) %>
+                <% } %>
+                <small>تومان</small>
+              </div>
+            </a>
+          <% }); %>
+        </div>
+      <% } %>
+
+    </div><!-- /products-main -->
+  </div><!-- /products-layout -->
+</div>
+
+<%- include('partials/footer') %>

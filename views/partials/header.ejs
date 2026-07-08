@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= typeof pageTitle !== 'undefined' ? pageTitle + ' | هیگر' : 'هیگر — تشک باکیفیت ایرانی' %></title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<header>
+  <div class="top-bar">
+    ارسال رایگان برای سفارش‌های بالای ۵ میلیون تومان · گارانتی اصالت کالا
+  </div>
+  <div class="nav-wrap">
+    <a href="/" class="logo">
+      <b>هیگر</b>
+      <span>HIGER MATTRESS</span>
+    </a>
+
+    <nav>
+      <ul>
+        <li><a href="/products">محصولات</a></li>
+
+        <!-- منوی دسته‌بندی با زیرمنوی درختی -->
+        <li class="nav-dropdown">
+          <a href="/products" class="nav-dropdown-toggle">دسته‌بندی‌ها <span class="nav-arrow">▾</span></a>
+          <div class="nav-mega-menu">
+            <div class="mega-column">
+              <!-- بر اساس لایه‌بندی -->
+              <div class="mega-group">
+                <div class="mega-group-header">
+                  <a href="/products" class="mega-group-title">بر اساس لایه‌بندی</a>
+                  <button class="mega-toggle-btn" aria-label="باز/بسته کردن" onclick="toggleMegaGroup(this)">›</button>
+                </div>
+                <div class="mega-group-body">
+
+                  <!-- فنری -->
+                  <div class="mega-item has-sub">
+                    <div class="mega-item-header">
+                      <a href="/products?category=spring-bonnell&category=spring-pocket" class="mega-item-link">فنری</a>
+                      <button class="mega-sub-toggle" onclick="toggleSubMenu(this)">›</button>
+                    </div>
+                    <div class="mega-sub-menu">
+                      <a href="/products?category=spring-pocket" class="mega-sub-item">
+                        <span class="sub-arrow">›</span> فنر منفصل
+                      </a>
+                      <a href="/products?category=spring-bonnell" class="mega-sub-item">
+                        <span class="sub-arrow">›</span> فنر متصل
+                      </a>
+                    </div>
+                  </div>
+
+                  <!-- بدون فنر -->
+                  <div class="mega-item has-sub">
+                    <div class="mega-item-header">
+                      <a href="/products?category=foam&category=memory-foam" class="mega-item-link">بدون فنر</a>
+                      <button class="mega-sub-toggle" onclick="toggleSubMenu(this)">›</button>
+                    </div>
+                    <div class="mega-sub-menu">
+                      <a href="/products?category=foam" class="mega-sub-item">
+                        <span class="sub-arrow">›</span> اسفنجی
+                      </a>
+                      <a href="/products?category=memory-foam" class="mega-sub-item">
+                        <span class="sub-arrow">›</span> مموری فوم
+                      </a>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+              <!-- بر اساس سایز -->
+              <div class="mega-group">
+                <div class="mega-group-header">
+                  <a href="/products" class="mega-group-title">بر اساس سایز</a>
+                  <button class="mega-toggle-btn" aria-label="باز/بسته کردن" onclick="toggleMegaGroup(this)">›</button>
+                </div>
+                <div class="mega-group-body">
+
+                  <div class="mega-item has-sub">
+                    <div class="mega-item-header">
+                      <a href="/products?sizeCategory=single" class="mega-item-link">یک نفره</a>
+                      <button class="mega-sub-toggle" onclick="toggleSubMenu(this)">›</button>
+                    </div>
+                    <div class="mega-sub-menu">
+                      <a href="/products?sizeCategory=single" class="mega-sub-item">
+                        <span class="sub-arrow">›</span> تشک یک نفره (۹۰–۱۲۰×۲۰۰)
+                      </a>
+                      <a href="/products?sizeCategory=single-large" class="mega-sub-item">
+                        <span class="sub-arrow">›</span> تشک یک نفره بزرگ (۱۴۰×۲۰۰)
+                      </a>
+                      <a href="/products?sizeCategory=kids" class="mega-sub-item">
+                        <span class="sub-arrow">›</span> تشک کودک و نوجوان
+                      </a>
+                    </div>
+                  </div>
+
+                  <div class="mega-item has-sub">
+                    <div class="mega-item-header">
+                      <a href="/products?sizeCategory=double" class="mega-item-link">دو نفره</a>
+                      <button class="mega-sub-toggle" onclick="toggleSubMenu(this)">›</button>
+                    </div>
+                    <div class="mega-sub-menu">
+                      <a href="/products?sizeCategory=double" class="mega-sub-item">
+                        <span class="sub-arrow">›</span> تشک دو نفره (۱۶۰×۲۰۰)
+                      </a>
+                      <a href="/products?sizeCategory=double-large" class="mega-sub-item">
+                        <span class="sub-arrow">›</span> تشک دو نفره بزرگ (۱۸۰×۲۰۰)
+                      </a>
+                      <a href="/products?sizeCategory=family" class="mega-sub-item">
+                        <span class="sub-arrow">›</span> تشک خانواده (۲۰۰×۲۰۰)
+                      </a>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <li><a href="/contact">تماس با ما</a></li>
+      </ul>
+    </nav>
+
+    <div class="header-actions">
+      <a href="/cart" class="cart-btn">
+        🛒
+        <% if (cartCount > 0) { %>
+          <span class="cart-count"><%= cartCount %></span>
+        <% } %>
+      </a>
+    </div>
+  </div>
+</header>
+
+<script>
+// Toggle گروه اصلی (لایه‌بندی / سایز)
+function toggleMegaGroup(btn) {
+  const header = btn.closest('.mega-group-header');
+  const body = header.nextElementSibling;
+  const isOpen = body.classList.contains('open');
+  // بستن همه گروه‌های باز
+  document.querySelectorAll('.mega-group-body.open').forEach(el => {
+    el.classList.remove('open');
+    el.previousElementSibling.querySelector('.mega-toggle-btn').classList.remove('rotated');
+  });
+  if (!isOpen) {
+    body.classList.add('open');
+    btn.classList.add('rotated');
+  }
+}
+
+// Toggle زیرمنو (فنری / بدون فنر / ...)
+function toggleSubMenu(btn) {
+  const header = btn.closest('.mega-item-header');
+  const sub = header.nextElementSibling;
+  const isOpen = sub.classList.contains('open');
+  // بستن سایر زیرمنوها در همین گروه
+  const siblings = btn.closest('.mega-group-body').querySelectorAll('.mega-sub-menu.open');
+  siblings.forEach(el => {
+    el.classList.remove('open');
+    el.previousElementSibling.querySelector('.mega-sub-toggle').classList.remove('rotated');
+  });
+  if (!isOpen) {
+    sub.classList.add('open');
+    btn.classList.add('rotated');
+  }
+}
+
+// باز/بسته کردن منوی دسته‌بندی با کلیک روی toggle
+document.addEventListener('DOMContentLoaded', function() {
+  const dropdown = document.querySelector('.nav-dropdown');
+  const toggle = dropdown ? dropdown.querySelector('.nav-dropdown-toggle') : null;
+  const mega = dropdown ? dropdown.querySelector('.nav-mega-menu') : null;
+
+  if (toggle && mega) {
+    toggle.addEventListener('click', function(e) {
+      e.preventDefault();
+      const isOpen = mega.classList.contains('open');
+      mega.classList.toggle('open', !isOpen);
+    });
+    // بستن با کلیک بیرون
+    document.addEventListener('click', function(e) {
+      if (!dropdown.contains(e.target)) {
+        mega.classList.remove('open');
+      }
+    });
+  }
+});
+</script>

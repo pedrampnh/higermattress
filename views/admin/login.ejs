@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ورود مدیریت | هیگر</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body class="admin-body">
+
+<div class="admin-login-wrap">
+  <div class="admin-login-card">
+    <div class="logo-area">
+      <div style="font-size:2rem; margin-bottom:4px;">🛏</div>
+      <b style="font-size:1.4rem; color:var(--ink-900);">هیگر</b>
+      <div style="font-size:0.6rem; letter-spacing:.28em; color:var(--honey-600); margin-top:2px;">ADMIN PANEL</div>
+    </div>
+
+    <h1>ورود به پنل مدیریت</h1>
+    <p>رمز عبور مدیریت را وارد کنید</p>
+
+    <% if (error) { %>
+      <div class="alert alert-error">⚠️ <%= error %></div>
+    <% } %>
+
+    <form method="POST" action="/admin/login" style="display:flex; flex-direction:column; gap:12px;">
+      <div class="field">
+        <label for="password">رمز عبور</label>
+        <input type="password" id="password" name="password" placeholder="••••••••" autofocus required
+          style="padding:12px 14px; font-size:1rem;">
+      </div>
+      <button type="submit" class="btn btn-primary btn-full" style="margin-top:4px; padding:12px;">
+        🔐 ورود به پنل
+      </button>
+    </form>
+
+    <div style="text-align:center; margin-top:16px;">
+      <a href="/" style="font-size:0.8rem; color:var(--ink-500);">← بازگشت به سایت</a>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
